@@ -1,27 +1,25 @@
 # Variables:
-PROGRAM = sym/SerialKDPProxy
-OBJECTS = obj/SerialKDPProxy.o obj/kdp_serial.o
+CC = gcc
+TARGET = SerialKDPProxy
+OBJECTS = src/SerialKDPProxy.o src/kdp_serial.o
 
 CFLAGS = -Wall
 
-# Phony rules:
-all: dirs $(PROGRAM)
+all: $(TARGET)
+
+
+# Programs to build:
+$(TARGET): $(OBJECTS)
+	$(CC) -g -D_BSD_SOURCE -o $(TARGET) $(OBJECTS)
+
+# Objects to build:
+src/SerialKDPProxy.o: src/SerialKDPProxy.c
+	$(CC) -c -g -D_BSD_SOURCE  $< -o $@
+
+src/kdp_serial.o: src/kdp_serial.c
+	$(CC) -c -g -D_BSD_SOURCE $< -o $@
 
 clean:
 	rm -f $(PROGRAM) $(OBJECTS)
-
-# Programs to build:
-$(PROGRAM): $(OBJECTS)
-	$(CC) -g -D_BSD_SOURCE -o $(PROGRAM) $(OBJECTS)
-
-# Objects to build:
-obj/SerialKDPProxy.o: src/SerialKDPProxy.c
-	$(COMPILE.c) -g -D_BSD_SOURCE  $(OUTPUT_OPTION) $<
-
-obj/kdp_serial.o: src/kdp_serial.c
-	$(COMPILE.c) -g -D_BSD_SOURCE $(OUTPUT_OPTION) $<
-
-.PHONY:
-dirs:
-	mkdir -p obj sym
-
+install : $(TARGET)
+	cp $(TARGET) /usr/local/bin
