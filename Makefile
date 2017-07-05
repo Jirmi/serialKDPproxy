@@ -20,6 +20,6 @@ src/kdp_serial.o: src/kdp_serial.c
 	$(CC) -c -g -D_BSD_SOURCE $< -o $@
 
 clean:
-	rm -f $(PROGRAM) $(OBJECTS)
+	rm -f $(TARGET) $(OBJECTS)
 install : $(TARGET)
 	cp $(TARGET) /usr/local/bin
