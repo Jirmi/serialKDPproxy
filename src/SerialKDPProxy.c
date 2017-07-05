@@ -214,7 +214,9 @@ int set_termopts(int fd)
 
     return rc;
 }
-
+void usage(char *name){
+    printf("usage : %s [port]\n", name);
+}
 
 int main(int argc, char **argv)
 {
@@ -222,25 +224,22 @@ int main(int argc, char **argv)
     int s;
 
     device_name = NULL;
-    while (1) {
-        int c;
 
-        c = getopt(argc, argv, "vd:");
-        if (-1 == c)
-            break;
-
-        switch (c) {
-            case 'v':
-                opt_verbose = 1;
-                break;
+    if (argc != 2 && argc != 3)
+    {
+        usage(argv[0]);
+        return -1;
+    }
+    for (int i = 0; i < argc; i++)
+    {
+        if (!strcmp(argv[i], "-v")) {
+            opt_verbose = 1;
+        } else {
+            printf("%s\n", argv[i]);
+            device_name = argv[i];
         }
     }
-
-    if (argc > optind)
-        device_name = argv[optind++];
-    else
-        device_name = "/dev/tty.usbserial-A40084Fi";
-
+    
     s = socket(AF_INET, SOCK_DGRAM, 0);
     if (s < 0) {
         fprintf(stderr, "Failed to open socket\n");
